@@ -50,6 +50,18 @@ migration-bundle/
 Supabase tables: `projects`, `categories`, `site_settings`, `contact_messages`, `user_roles`.
 Schema is in `migration-bundle/schema.sql`.
 
+## Netlify deployment
+
+The app uses SSR (Nitro). The `netlify.toml` is configured to:
+- Set `NITRO_PRESET=netlify` so Nitro outputs a Netlify serverless function
+- Publish static assets from `.output/public`
+- Catch-all redirect routes all requests to `/.netlify/functions/server`
+
+**Required env vars in Netlify dashboard** (Site → Environment variables):
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_PUBLISHABLE_KEY`
+- `VITE_SUPABASE_PROJECT_ID`
+
 ## User preferences
 
 - Keep the existing TanStack Start + Supabase + Tailwind stack.
