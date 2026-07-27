@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search, SlidersHorizontal, Layers } from "lucide-react";
 import { z } from "zod";
 import { projectsQuery, categoriesQuery } from "@/lib/queries";
 import { ProjectCard } from "@/components/site/ProjectCard";
@@ -70,31 +70,37 @@ function ProjectsPage() {
   }, [projects, q, category, sort]);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-      <div className="max-w-2xl">
-        <p className="text-sm font-semibold uppercase tracking-widest text-primary">Portfolio</p>
-        <h1 className="mt-2 text-4xl font-bold tracking-tight sm:text-5xl">All Projects</h1>
-        <p className="mt-3 text-muted-foreground">
+    <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      {/* Header */}
+      <div className="max-w-2xl mb-10">
+        <p className="section-label">Portfolio</p>
+        <h1 className="mt-3 font-display text-4xl font-bold tracking-tight sm:text-5xl">
+          All <span className="gradient-text">Projects</span>
+        </h1>
+        <p className="mt-3 text-muted-foreground leading-relaxed">
           Browse everything I've built — apps, websites, bots and automation tools.
         </p>
       </div>
 
-      <div className="mt-10 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div className="relative w-full lg:max-w-md">
-          <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+      {/* Filters */}
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between mb-8">
+        {/* Search */}
+        <div className="relative w-full lg:max-w-sm">
+          <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
           <input
             value={q}
             onChange={(e) => navigate({ search: (s: Record<string, unknown>) => ({ ...s, q: e.target.value || undefined }), replace: true })}
             placeholder="Search projects, tech, tags..."
-            className="w-full rounded-2xl border border-border bg-card py-3 pl-10 pr-4 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+            className="w-full rounded-2xl border border-border/60 bg-card/60 py-3 pl-11 pr-4 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all backdrop-blur-sm placeholder:text-muted-foreground/60"
           />
         </div>
 
-        <div className="flex items-center gap-2">
-          <div className="hidden items-center gap-1 rounded-2xl border border-border bg-card p-1 md:flex">
+        <div className="flex items-center gap-2 flex-wrap">
+          {/* Desktop category pills */}
+          <div className="hidden items-center gap-1 rounded-2xl border border-border/60 bg-card/60 p-1 backdrop-blur-sm md:flex">
             <button
               onClick={() => navigate({ search: (s: Record<string, unknown>) => ({ ...s, category: undefined }), replace: true })}
-              className={`rounded-xl px-3 py-1.5 text-xs font-medium ${category === "all" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
+              className={`rounded-xl px-3.5 py-1.5 text-xs font-medium transition-all ${category === "all" ? "btn-primary" : "text-muted-foreground hover:text-foreground hover:bg-white/5"}`}
             >
               All
             </button>
@@ -102,19 +108,20 @@ function ProjectsPage() {
               <button
                 key={c.slug}
                 onClick={() => navigate({ search: (s: Record<string, unknown>) => ({ ...s, category: c.slug }), replace: true })}
-                className={`rounded-xl px-3 py-1.5 text-xs font-medium ${category === c.slug ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                className={`rounded-xl px-3.5 py-1.5 text-xs font-medium transition-all ${category === c.slug ? "btn-primary" : "text-muted-foreground hover:text-foreground hover:bg-white/5"}`}
               >
                 {c.name}
               </button>
             ))}
           </div>
 
+          {/* Sort */}
           <div className="relative">
-            <SlidersHorizontal className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <SlidersHorizontal className="pointer-events-none absolute left-3.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as typeof sort)}
-              className="appearance-none rounded-2xl border border-border bg-card py-2.5 pl-9 pr-8 text-sm font-medium outline-none focus:border-primary"
+              className="appearance-none rounded-2xl border border-border/60 bg-card/60 py-2.5 pl-9 pr-8 text-sm font-medium outline-none focus:border-primary backdrop-blur-sm cursor-pointer"
             >
               {sortOptions.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
@@ -122,27 +129,39 @@ function ProjectsPage() {
         </div>
       </div>
 
-      {/* mobile category chips */}
-      <div className="mt-4 flex gap-2 overflow-x-auto pb-2 md:hidden">
+      {/* Mobile category chips */}
+      <div className="flex gap-2 overflow-x-auto pb-3 md:hidden mb-4 scrollbar-hide">
         <button
           onClick={() => navigate({ search: (s: Record<string, unknown>) => ({ ...s, category: undefined }), replace: true })}
-          className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium ${category === "all" ? "bg-primary text-primary-foreground" : "bg-card border border-border text-muted-foreground"}`}
+          className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-medium transition-all ${category === "all" ? "btn-primary" : "border border-border/60 bg-card/60 text-muted-foreground backdrop-blur-sm"}`}
         >All</button>
         {categories.map((c) => (
           <button
             key={c.slug}
             onClick={() => navigate({ search: (s: Record<string, unknown>) => ({ ...s, category: c.slug }), replace: true })}
-            className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium ${category === c.slug ? "bg-primary text-primary-foreground" : "bg-card border border-border text-muted-foreground"}`}
+            className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-medium transition-all ${category === c.slug ? "btn-primary" : "border border-border/60 bg-card/60 text-muted-foreground backdrop-blur-sm"}`}
           >{c.name}</button>
         ))}
       </div>
 
+      {/* Results count */}
+      {(q || category !== "all") && (
+        <p className="text-sm text-muted-foreground mb-6">
+          {filtered.length} {filtered.length === 1 ? "project" : "projects"} found
+        </p>
+      )}
+
+      {/* Grid */}
       {filtered.length === 0 ? (
-        <div className="mt-16 surface-card p-10 text-center">
-          <p className="text-muted-foreground">No projects match your filters.</p>
+        <div className="mt-8 glass-card p-16 text-center">
+          <div className="mx-auto h-12 w-12 grid place-items-center rounded-2xl bg-muted border border-border/60 mb-4">
+            <Layers className="h-6 w-6 text-muted-foreground" />
+          </div>
+          <h3 className="font-display font-semibold">No projects found</h3>
+          <p className="mt-2 text-sm text-muted-foreground">Try adjusting your search or filters.</p>
         </div>
       ) : (
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((p) => <ProjectCard key={p.id} project={p} />)}
         </div>
       )}
