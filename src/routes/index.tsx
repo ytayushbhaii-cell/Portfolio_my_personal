@@ -180,11 +180,8 @@ function Home() {
             </div>
             <h3 className="mt-5 font-display text-xl font-semibold">Projects launching soon</h3>
             <p className="mt-2 text-sm text-muted-foreground">
-              Sign in to the admin panel to add your first project — it'll appear here instantly.
+              Amazing projects are being prepared — check back soon!
             </p>
-            <Link to="/admin/login" className="mt-6 inline-flex btn-primary hover:[&]:btn-primary-hover rounded-xl px-5 py-2.5 text-sm font-semibold">
-              Go to Admin
-            </Link>
           </div>
         </section>
       )}
