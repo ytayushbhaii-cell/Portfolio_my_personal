@@ -22,14 +22,14 @@ export function SiteHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => { setOpen(false); }, [pathname]);
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   return (
     <header
       className={`sticky top-0 z-40 transition-all duration-300 ${
-        scrolled
-          ? "glass-nav shadow-[0_1px_0_0_var(--border)]"
-          : "bg-transparent"
+        scrolled ? "glass-nav shadow-[0_1px_0_0_var(--border)]" : "bg-transparent"
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
@@ -74,9 +74,12 @@ export function SiteHeader() {
             Hire Me →
           </Link>
           <button
+            type="button"
             onClick={() => setOpen((o) => !o)}
             className="md:hidden grid h-10 w-10 place-items-center rounded-xl border border-border bg-card/60 backdrop-blur text-foreground transition hover:border-primary/40"
-            aria-label="Menu"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            aria-controls="mobile-navigation"
           >
             {open ? <X className="h-4.5 w-4.5" /> : <Menu className="h-4.5 w-4.5" />}
           </button>
@@ -85,7 +88,10 @@ export function SiteHeader() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden border-t border-border/50 bg-background/95 backdrop-blur-xl animate-fade-up">
+        <div
+          id="mobile-navigation"
+          className="absolute inset-x-0 top-full md:hidden border-t border-border/50 bg-background/95 shadow-lg backdrop-blur-xl animate-fade-up"
+        >
           <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4">
             {links.map((l) => {
               const active = l.to === "/" ? pathname === "/" : pathname.startsWith(l.to);
@@ -94,14 +100,19 @@ export function SiteHeader() {
                   key={l.to}
                   to={l.to}
                   className={`rounded-xl px-4 py-2.5 text-sm font-medium transition-colors ${
-                    active ? "bg-primary/15 text-primary" : "text-muted-foreground hover:bg-white/5 hover:text-foreground"
+                    active
+                      ? "bg-primary/15 text-primary"
+                      : "text-muted-foreground hover:bg-white/5 hover:text-foreground"
                   }`}
                 >
                   {l.label}
                 </Link>
               );
             })}
-            <Link to="/contact" className="mt-2 btn-primary rounded-xl px-4 py-2.5 text-center text-sm font-semibold">
+            <Link
+              to="/contact"
+              className="mt-2 btn-primary rounded-xl px-4 py-2.5 text-center text-sm font-semibold"
+            >
               Hire Me →
             </Link>
           </nav>
