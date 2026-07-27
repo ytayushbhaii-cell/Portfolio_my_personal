@@ -48,7 +48,7 @@ function Home() {
   return (
     <>
       {/* ─── Hero ─── */}
-      <section className="relative overflow-hidden min-h-[88vh] flex items-center">
+      <section className="relative overflow-hidden flex items-center">
         {/* Background */}
         <div className="pointer-events-none absolute inset-0 dot-grid opacity-40" />
         <div className="pointer-events-none absolute inset-0 hero-bg" />
